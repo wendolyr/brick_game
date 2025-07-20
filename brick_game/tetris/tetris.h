@@ -271,6 +271,13 @@ void checkGhostPlace(GameInfo_t *tetris, Tetromino *tetromino, int i, int j,
                      int k, int *flag);
 
 /**
+ * @brief remove tetromino from field matrix after merge
+ * @param tetris - current state of the game
+ * @param tetromino - current state of the tetromino
+ */
+void removeFigureFromField(GameInfo_t *tetris, Tetromino *tetromino);
+
+/**
  * @brief gets access to struct Singleton
  * @return pointer to Singleton struct
  */

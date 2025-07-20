@@ -159,6 +159,10 @@ void GameView::DrawStats(QPainter &painter) {
 }
 
 void GameView::DrawField(QPainter &painter) {
+  if (!game_.field) {
+    return;
+  }
+
   int cell_width = 300 / kWidth;
   int cell_height = 600 / kHeight;
 

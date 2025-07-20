@@ -29,6 +29,7 @@ CLI_DIR_OBJ = $(OBJ_DIR)/cli
 
 TETRIS_DIR = ./brick_game/tetris
 TETRIS_DIR_OBJ = $(OBJ_DIR)/tetris
+TETRIS_TEST = ./tests/tetris_tests.c
 
 SNAKE_DIR = ./brick_game/snake
 SNAKE_DIR_OBJ = $(OBJ_DIR)/snake
@@ -61,13 +62,23 @@ install: uninstall
 uninstall: clean
 		@rm -rf $(BUILD_DIR) $(RECORDS_DIR)
 
-test: clean $(SNAKE_LIB) $(TETRIS_LIB)
+test: clean tetris_test snake_test
+		@./tetris_tests
+		@./snake_tests
+
+snake_test: $(SNAKE_LIB)
 		@mkdir -p $(RECORDS_DIR)
 		@rm -rf $(RECORDS_DIR)/.snake_record.txt
 		@$(CXX) $(CXXFLAGS) $(SNAKE_TEST) $(SNAKE_LIB) -o snake_tests $(TESTFLAGS)
-		@./snake_tests
+
+tetris_test: $(TETRIS_LIB)
+		@mkdir -p $(RECORDS_DIR)
+		@rm -rf $(RECORDS_DIR)/.tetris_record.txt
+		@$(CC) $(CFLAGS) $(TETRIS_TEST) $(TETRIS_LIB) -o tetris_tests $(LDFLAGS)
+		
 
 gcov_report: CXXFLAGS += --coverage
+gcov_report: CFLAGS += --coverage
 gcov_report: test
 		@mkdir -p $(LOGS_DIR)
 		@echo "Generating coverage report via gcovr..."
@@ -78,7 +89,7 @@ gcov_report: test
 		--html-theme green \
 		-o $(LOGS_DIR)/coverage_report.html
 		@echo "Report generated: coverage_report.html"
-# 		@open $(LOGS_DIR)/coverage_report.html
+		@open $(LOGS_DIR)/coverage_report.html
 
 dvi:
 		@rm -rf doxygen
@@ -93,20 +104,33 @@ dist: clean
 play:	
 		@$(BUILD_DIR)/$(BIN)
 
-valgrind: test
-		@rm -rf $(RECORDS_DIR)/.snake_record.txt
+valgrind: tetris_test snake_test
 		@clear
-		@valgrind --tool=memcheck --leak-check=yes ./snake_tests
+		@echo "Valgrind checking..."
+		@rm -rf $(RECORDS_DIR)/.tetris_record.txt
+		@rm -rf $(RECORDS_DIR)/.snake_record.txt
+		@valgrind --tool=memcheck --leak-check=yes ./tetris_tests > tetris_valgrind.txt 2>&1
+		@valgrind --tool=memcheck --leak-check=yes ./snake_tests > snake_valgrind.txt 2>&1
+		@echo "Valgrind checking completed! Output files: \ntetris_valgrind.txt \nsnake_valgrind.txt"
+
+leaks: tetris_test snake_test
+		@clear
+		@echo "Leaks checking..."
+		@rm -rf $(RECORDS_DIR)/.tetris_record.txt
+		@rm -rf $(RECORDS_DIR)/.snake_record.txt
+		@leaks -atExit -- ./tetris_tests > tetris_leaks.txt 2>&1
+		@leaks -atExit -- ./snake_tests > snake_leaks.txt 2>&1
+		@echo "Leaks checking completed! Output files: \ntetris_leaks.txt \nsnake_leaks.txt"
 
 clang:
 		@echo "Checking clang-format..."
 		@cp ../materials/linters/.clang-format .
 		@clang-format -n *.c $(BACK_DIR)/*.c $(FRONT_DIR)/*.c ./headers/*.h ./tests/*.c ./tests/*.h
-		@echo "Checking complete!"
+		@echo "Checking completed!"
 
 clean:	
-		@rm -rf $(OBJ_DIR) $(LOGS_DIR) $(LIB_DIR) .clang-format *.gcda *.gcno snake_tests doxygen
-
+		@rm -rf $(OBJ_DIR) $(LOGS_DIR) $(LIB_DIR) .clang-format *.gcda *.gcno snake_tests tetris_tests doxygen
+		@rm -rf tetris_valgrind.txt snake_valgrind.txt tetris_leaks.txt snake_leaks.txt
 
 $(CLI_DIR_OBJ) $(TETRIS_DIR_OBJ) $(SNAKE_DIR_OBJ):
 		@mkdir -p $(OBJ_DIR)

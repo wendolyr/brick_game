@@ -6,6 +6,7 @@ void userInput(UserAction_t action, bool hold) {
   }
 
   Singleton *game = *getState();
+  removeFigureFromField(game->tetris, game->tetromino);
 
   if (timer() && game->state == kMoving && action != Terminate) {
     action = Down;
@@ -34,26 +35,49 @@ GameInfo_t updateCurrentState() {
 
   if (game != NULL) {
     tetris = *(game->tetris);
-    int code = kOk;
-    int **temp = createMatrix(FIELD_HEIGHT, FIELD_WIDTH, &code);
-    if (code == kOk) {
-      for (int i = 0; i < FIELD_HEIGHT; i++) {
-        for (int j = 0; j < FIELD_WIDTH; j++) {
-          temp[i][j] = tetris.field[i][j];
-        }
-      }
-      tetris.field = temp;
-      Tetromino tetromino = *(game->tetromino);
-      mergeFieldWithFigure(&tetris, &tetromino);
-    } else {
-      removeGame();
-      tetris.field = NULL;
-    }
+    // int code = kOk;
+    // int **temp = createMatrix(FIELD_HEIGHT, FIELD_WIDTH, &code);
+    // if (code == kOk) {
+    //   for (int i = 0; i < FIELD_HEIGHT; i++) {
+    //     for (int j = 0; j < FIELD_WIDTH; j++) {
+    //       temp[i][j] = tetris.field[i][j];
+    //     }
+    //   }
+    //   tetris.field = temp;
+
+    // Tetromino tetromino = *(game->tetromino);
+    mergeFieldWithFigure(&tetris, game->tetromino);
+    // } else {
+    //   removeGame();
+    //   tetris.field = NULL;
+    // }
   } else {
     tetris.field = NULL;
   }
 
   return tetris;
+}
+
+void removeFigureFromField(GameInfo_t *tetris, Tetromino *tetromino) {
+  for (int i = 0; i < FIELD_HEIGHT; ++i) {
+    for (int j = 0; j < FIELD_WIDTH; ++j) {
+      if (tetris->field[i][j] == GHOST_CELL) {
+        tetris->field[i][j] = 0;
+      }
+    }
+  }
+
+  for (int i = 0; i < TETR_SIZE; i++) {
+    for (int j = 0; j < TETR_SIZE; j++) {
+      if (tetromino->shape[i][j]) {
+        int x_corrected = tetromino->x - 2 + j;
+        int y_corrected = tetromino->y - 2 + i;
+        if (y_corrected >= 0) {
+          tetris->field[y_corrected][x_corrected] = 0;
+        }
+      }
+    }
+  }
 }
 
 void mergeFieldWithFigure(GameInfo_t *tetris, Tetromino *tetromino) {
@@ -77,7 +101,7 @@ void mergeFieldWithFigure(GameInfo_t *tetris, Tetromino *tetromino) {
         y_corrected = tetromino->y - 2 + i + ghost_shift;
 
         if (y_corrected > 0) {
-          tetris->field[y_corrected][x_corrected] = 33;
+          tetris->field[y_corrected][x_corrected] = GHOST_CELL;
         }
       }
     }

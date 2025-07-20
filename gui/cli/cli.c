@@ -169,7 +169,7 @@ void printField(GameInfo_t *game) {
     for (int j = 0; j < FIELD_WIDTH; j++) {
       if (game->field[i][j] == 0) {
         mvprintw(FIELD_TOP + i, FIELD_LEFT + j * CELL_WIDTH, "  ");
-      } else if (game->field[i][j] == 33) {
+      } else if (game->field[i][j] == GHOST_CELL) {
         mvprintw(FIELD_TOP + i, FIELD_LEFT + j * CELL_WIDTH, "[]");
       } else {
         attron(COLOR_PAIR(game->field[i][j]));

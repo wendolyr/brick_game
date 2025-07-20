@@ -217,6 +217,12 @@ int attachingTetromino(Singleton *game) {
     }
   }
 
+  for (int i = 0; i < TETR_SIZE; ++i) {
+    for (int j = 0; j < TETR_SIZE; ++j) {
+      game->tetromino->shape[i][j] = 0;
+    }
+  }
+
   if (permission) {
     checkingFieldRows(game);
     game->state = kSpawn;

@@ -10,7 +10,7 @@ void mainMenuInteraction(Singleton *game, UserAction_t action) {
       game->state = kSpawn;
       game->tetris->pause = kNoPause;
     }
-  } else if (game->tetris->pause == kMainMenuTwo) {
+  } else {
     if (action == Up)
       game->tetris->pause = kMainMenuOne;
     else if (action == Start)
@@ -28,7 +28,7 @@ void gameOverInteraction(Singleton *game, UserAction_t action) {
     } else if (action == Down)
       game->tetris->pause = kGameOverTwo;
 
-  } else if (game->tetris->pause == kGameOverTwo) {
+  } else {
     if (action == Start) {
       game->state = kExit;
     } else if (action == Up)
@@ -48,7 +48,7 @@ void pauseInteraction(Singleton *game, UserAction_t action) {
       game->tetris->pause = kNoPause;
     } else if (action == Down)
       game->tetris->pause = kPauseTwo;
-  } else if (game->tetris->pause == kPauseTwo) {
+  } else {
     if (action == Start) {
       game->state = kExit;
     } else if (action == Up)

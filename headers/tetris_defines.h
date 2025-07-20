@@ -26,6 +26,11 @@ extern "C" {
 #define TETR_SIZE 5
 
 /**
+ * @brief ghost tetromino cell value in field matrix
+ */
+#define GHOST_CELL 33
+
+/**
  * @brief Game pause states enumeration
  * @details Describes different menu and pause states
  */
