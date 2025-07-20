@@ -27,6 +27,10 @@ void userInput(UserAction_t action, bool hold) {
     saveHighScore(game->tetris);
     removeGame();
   }
+
+  if (*getState()) {
+    mergeFieldWithFigure(game->tetris, game->tetromino);
+  }
 }
 
 GameInfo_t updateCurrentState() {
@@ -46,7 +50,7 @@ GameInfo_t updateCurrentState() {
     //   tetris.field = temp;
 
     // Tetromino tetromino = *(game->tetromino);
-    mergeFieldWithFigure(&tetris, game->tetromino);
+    // mergeFieldWithFigure(&tetris, game->tetromino);
     // } else {
     //   removeGame();
     //   tetris.field = NULL;
