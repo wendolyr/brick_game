@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+946bde924c93df536b4a14197c92b7c0 CMakeFiles/brick_game_autogen
