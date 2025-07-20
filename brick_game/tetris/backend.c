@@ -99,25 +99,14 @@ void mergeFieldWithFigure(GameInfo_t *tetris, Tetromino *tetromino) {
 
   for (int i = 0; i < TETR_SIZE; i++) {
     for (int j = 0; j < TETR_SIZE; j++) {
-      if (tetromino->shape[i][j] != 0 && ghost_shift != 0) {
-        int x_corrected = 0, y_corrected = 0;
-        x_corrected = tetromino->x - 2 + j;
-        y_corrected = tetromino->y - 2 + i + ghost_shift;
-
-        if (y_corrected > 0) {
-          tetris->field[y_corrected][x_corrected] = GHOST_CELL;
-        }
-      }
-    }
-  }
-
-  for (int i = 0; i < TETR_SIZE; i++) {
-    for (int j = 0; j < TETR_SIZE; j++) {
       if (tetromino->shape[i][j]) {
         int x_corrected = 0, y_corrected = 0;
         x_corrected = tetromino->x - 2 + j;
         y_corrected = tetromino->y - 2 + i;
 
+        if (y_corrected + ghost_shift >= 0) {
+          tetris->field[y_corrected + ghost_shift][x_corrected] = GHOST_CELL;
+        }
         if (y_corrected >= 0) {
           tetris->field[y_corrected][x_corrected] = tetromino->shape[i][j];
         }
