@@ -31,11 +31,6 @@ DEFINES
 */
 
 /**
- * @brief max level of the game
- */
-#define MAX_LEVEL 10
-
-/**
  * @brief required points to level up
  */
 #define LEVELUP_SCORE 600

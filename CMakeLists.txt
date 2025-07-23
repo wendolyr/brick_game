@@ -21,7 +21,7 @@ add_executable(brick_game
     gui/desktop/desktop.cc
 )
 
-add_compile_options(-Wall -Werror -Wextra)
+add_compile_options(-Wall -Werror -Wextra -Wpedantic -Wshadow)
 
 target_include_directories(brick_game PRIVATE ${CURSES_INCLUDE_DIR})
 

@@ -10,24 +10,25 @@ GameView::GameView(void (*userInput)(UserAction_t, bool),
       game_{},
       text_color_(Qt::red) {
   setFixedSize(500, 600);
-  // setFocusPolicy(Qt::StrongFocus);
   setFocus();
   CreateButtons();
 
   connect(&game_timer_, &QTimer::timeout, this, &GameView::GameLoop);
   game_timer_.start(1);
 
-  QPropertyAnimation *toRed = new QPropertyAnimation(this, "textColor");
+  QSequentialAnimationGroup *group = new QSequentialAnimationGroup(this);
+
+  QPropertyAnimation *toRed = new QPropertyAnimation(this, "textColor", group);
   toRed->setStartValue(QColor(255, 255, 0));
   toRed->setEndValue(QColor(255, 0, 0));
   toRed->setDuration(1000);
 
-  QPropertyAnimation *toYellow = new QPropertyAnimation(this, "textColor");
+  QPropertyAnimation *toYellow =
+      new QPropertyAnimation(this, "textColor", group);
   toYellow->setStartValue(QColor(255, 0, 0));
   toYellow->setEndValue(QColor(255, 255, 0));
   toYellow->setDuration(1000);
 
-  QSequentialAnimationGroup *group = new QSequentialAnimationGroup(this);
   group->addAnimation(toRed);
   group->addAnimation(toYellow);
   group->setLoopCount(-1);
@@ -288,16 +289,15 @@ void GameView::DrawGameOver(QPainter &painter) {
   } else {
     painter.drawText(rect().adjusted(0, 0, -200, -(height() / 2 + 100)),
                      Qt::AlignCenter, "GAME OVER");
+  }
+  font.setPointSize(12);
+  painter.setFont(font);
 
-    font.setPointSize(12);
-    painter.setFont(font);
-
-    if (game_.score > game_.high_score) {
-      painter.drawText(rect().adjusted(0, 0, -200, -(height() / 2 + 50)),
-                       Qt::AlignCenter, "Congrats!");
-      painter.drawText(rect().adjusted(0, 0, -200, -(height() / 2)),
-                       Qt::AlignCenter, "You beat the record!");
-    }
+  if (game_.score > game_.high_score) {
+    painter.drawText(rect().adjusted(0, 0, -200, -(height() / 2 + 50)),
+                     Qt::AlignCenter, "Congrats!");
+    painter.drawText(rect().adjusted(0, 0, -200, -(height() / 2)),
+                     Qt::AlignCenter, "You beat the record!");
   }
 
   font.setPointSize(12);

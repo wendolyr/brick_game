@@ -218,7 +218,11 @@ void printGameOverScreen(GameInfo_t *tetris) {
   clearGameInfo();
 
   attron(A_BOLD);
-  mvprintw(3, 9, "GAME OVER");
+  if (tetris->level == MAX_LEVEL + 1) {
+    mvprintw(3, 10, "YOU WON!");
+  } else {
+    mvprintw(3, 9, "GAME OVER");
+  }
   mvprintw(12, 8, "Last record");
   attroff(A_BOLD);
 

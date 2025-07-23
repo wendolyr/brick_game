@@ -195,9 +195,13 @@ class SnakeGame {
  * @brief Controller class for Snake game
  */
 class SnakeController {
- public:
+ private:
   SnakeController() = default;
   ~SnakeController() = default;
+
+ public:
+  SnakeController(const SnakeController &other) = delete;
+  SnakeController(SnakeController &&other) = delete;
 
   /**
    * @brief Processes user input

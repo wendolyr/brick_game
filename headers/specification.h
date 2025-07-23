@@ -28,22 +28,15 @@ typedef enum {
 
 /**
  * @brief Describes the information about game field
- * @details field - pointer at the game field matrix HEIGHT*WIDTH
- * @details next - pointer at the next tetromino that will be spawned
- * @details score - player score
- * @details high_score - local game record
- * @details level - current game level from 1 to 10
- * @details speed - current game speed
- * @details pause - pause state for menu interaction
  */
 typedef struct {
-  int **field;
-  int **next;
-  int score;
-  int high_score;
-  int level;
-  int speed;
-  int pause;
+  int **field;     ///< pointer at the game field matrix HEIGHT*WIDTH
+  int **next;      ///< pointer at the next tetromino that will be spawned
+  int score;       ///< player score
+  int high_score;  ///< local game record
+  int level;       ///< current game level from 1 to 10
+  int speed;       ///< current game speed
+  int pause;       ///< pause state for menu interaction
 } GameInfo_t;
 
 #ifdef __cplusplus

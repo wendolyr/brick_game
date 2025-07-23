@@ -26,6 +26,11 @@ extern "C" {
 #define TETR_SIZE 5
 
 /**
+ * @brief max level of the game
+ */
+#define MAX_LEVEL 10
+
+/**
  * @brief ghost tetromino cell value in field matrix
  */
 #define GHOST_CELL 33

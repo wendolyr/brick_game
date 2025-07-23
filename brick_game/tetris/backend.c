@@ -39,22 +39,6 @@ GameInfo_t updateCurrentState() {
 
   if (game != NULL) {
     tetris = *(game->tetris);
-    // int code = kOk;
-    // int **temp = createMatrix(FIELD_HEIGHT, FIELD_WIDTH, &code);
-    // if (code == kOk) {
-    //   for (int i = 0; i < FIELD_HEIGHT; i++) {
-    //     for (int j = 0; j < FIELD_WIDTH; j++) {
-    //       temp[i][j] = tetris.field[i][j];
-    //     }
-    //   }
-    //   tetris.field = temp;
-
-    // Tetromino tetromino = *(game->tetromino);
-    // mergeFieldWithFigure(&tetris, game->tetromino);
-    // } else {
-    //   removeGame();
-    //   tetris.field = NULL;
-    // }
   } else {
     tetris.field = NULL;
   }

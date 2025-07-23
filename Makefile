@@ -1,11 +1,9 @@
 CC = gcc
 CXX = g++
 
-CFLAGS = -Wall -Werror -Wextra -Wpedantic -std=c11
+CFLAGS = -Wall -Werror -Wextra -Wpedantic -Wshadow -std=c11
 CXXFLAGS = -Wall -Werror -Wextra -Wpedantic -Wshadow -std=c++20
 TESTFLAGS = -lgtest
-
-SANFLAG=#-fsanitize=address -g
 
 SHELLNAME:=$(shell uname)
 ifeq ($(SHELLNAME), Linux)
@@ -91,20 +89,20 @@ gcov_report: test
 		@echo "Report generated: coverage_report.html"
 		@open $(LOGS_DIR)/coverage_report.html
 
-dvi:
-		@rm -rf doxygen
+dvi: clean
 		@doxygen && open doxygen/html/index.html
 
 dist: clean
 		@echo "Creating archive..."
-		@mkdir -p @+$(DIST_DIR)
+		@mkdir -p $(DIST_DIR)
 		@tar -czf $(DIST_DIR)/$(DIST_NAME) $(DIST_FILES)
 		@echo "Archive created!"
 
 play:	
+		mkdir -p records
 		@$(BUILD_DIR)/$(BIN)
 
-valgrind: tetris_test snake_test
+valgrind: clean tetris_test snake_test
 		@clear
 		@echo "Valgrind checking..."
 		@rm -rf $(RECORDS_DIR)/.tetris_record.txt
@@ -113,7 +111,7 @@ valgrind: tetris_test snake_test
 		@valgrind --tool=memcheck --leak-check=yes ./snake_tests > snake_valgrind.txt 2>&1
 		@echo "Valgrind checking completed! Output files: \ntetris_valgrind.txt \nsnake_valgrind.txt"
 
-leaks: tetris_test snake_test
+leaks: clean tetris_test snake_test
 		@clear
 		@echo "Leaks checking..."
 		@rm -rf $(RECORDS_DIR)/.tetris_record.txt
@@ -125,11 +123,13 @@ leaks: tetris_test snake_test
 clang:
 		@echo "Checking clang-format..."
 		@cp ../materials/linters/.clang-format .
-		@clang-format -n *.c $(BACK_DIR)/*.c $(FRONT_DIR)/*.c ./headers/*.h ./tests/*.c ./tests/*.h
+		@find . -type f -name "*.cc" -exec clang-format -n {} \;
+		@find . -type f -name "*.c" -exec clang-format -n {} \;
+		@rm -rf .clang-format
 		@echo "Checking completed!"
 
 clean:	
-		@rm -rf $(OBJ_DIR) $(LOGS_DIR) $(LIB_DIR) .clang-format *.gcda *.gcno snake_tests tetris_tests doxygen
+		@rm -rf $(OBJ_DIR) $(LOGS_DIR) $(LIB_DIR) $(DIST_DIR) .clang-format *.gcda *.gcno snake_tests tetris_tests doxygen
 		@rm -rf tetris_valgrind.txt snake_valgrind.txt tetris_leaks.txt snake_leaks.txt
 
 $(CLI_DIR_OBJ) $(TETRIS_DIR_OBJ) $(SNAKE_DIR_OBJ):
@@ -147,10 +147,10 @@ $(SNAKE_LIB): $(SNAKE_OBJ)
 
 $(TETRIS_DIR_OBJ)/%.o: $(TETRIS_DIR)/%.c | $(TETRIS_DIR_OBJ)
 
-		@$(CC) $(CFLAGS) -c $(SANFLAG) $< -o $@
+		@$(CC) $(CFLAGS) -c $< -o $@
 
 $(SNAKE_DIR_OBJ)/%.o: $(SNAKE_DIR)/%.cc | $(SNAKE_DIR_OBJ)
-		@$(CXX) $(CXXFLAGS) -c $(SANFLAG) $< -o $@
+		@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(CLI_DIR_OBJ)/%.o: $(CLI_DIR)/%.c | $(CLI_DIR_OBJ)
-		@$(CC) $(CFLAGS) -c $(SANFLAG) $< -o $@
+		@$(CC) $(CFLAGS) -c $< -o $@
