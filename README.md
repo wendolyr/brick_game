@@ -46,7 +46,7 @@ A hybrid collection of classic games featuring Tetris and Snake with multiple in
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/brickgame.git
+git clone git@github.com:wendolyr/brick_game.git
 cd brickgame
 
 # Build 
