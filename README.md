@@ -19,7 +19,7 @@ A hybrid collection of classic games featuring Tetris and Snake with multiple in
   - Controller: Input handling and state management
 - **Singleton** pattern for game state management
 - **Finite State Machine** for game flow control
-- 
+
 ### Tetris Features
 - Classic rotation system (SRS)
 - Ghost piece prediction
